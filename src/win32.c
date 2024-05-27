@@ -6,11 +6,11 @@
 #include <memory.h>
 
 #include "include.h"
+#include "response.h"
 #include "error.h"
 
 #define PORT 5555
 
-// returns 1 if failure, 0 if not.
 void HandleConnection(SOCKET connection) {
     char buffer[1024] = {0};
 
@@ -20,6 +20,8 @@ void HandleConnection(SOCKET connection) {
         closesocket(connection);
         puts("An error occured with recieve on a thread.");
         ExitThread(1);
+    } else {
+        ResponseBuilder();
     }
 
     printf("%s", buffer);
@@ -65,9 +67,9 @@ int main(void) {
     // Listen
     result = listen(sockfd, SOMAXCONN);
     if (result != 0)
-        CleanExit("Failed to listen on port 5555.", WSAGetLastError(), &sockfd);
+        CleanExit("Failed to listen.", WSAGetLastError(), &sockfd);
     else
-        puts("Listening now on http://127.0.0.1:5555!\n"); // make sure to add the actual PORT in sprintf later
+        printf("Now listening on port http://127.0.0.1:%i\n\n", PORT); // make sure to add the actual PORT in sprintf later
 
     // accept and handle connection
     struct sockaddr client; ZeroMemory(&client, sizeof(struct sockaddr)); // unused for now, contains info about client.
