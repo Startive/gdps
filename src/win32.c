@@ -25,12 +25,11 @@ void HandleConnection(SOCKET connection) {
     Response response;
     ResponseBuilder(buffer, &response);
 
-    printf("%s", buffer);
     printf("content: %s\n", response.content);
-    printf("response headers: %s\n", response.headers);
+    printf("response headers:\n%s\n", response.headers);
 
     send(connection, response.headers, strlen(response.headers), 0); // please do NOT change strlen to sizeof :)
-    send(connection, response.content, response.contentLength, 0);
+    send(connection, response.content, strlen(response.content), 0);
 
     free(response.content);
     response.content = NULL;
