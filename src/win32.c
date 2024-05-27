@@ -12,22 +12,28 @@
 #define PORT 5555
 
 void HandleConnection(SOCKET connection) {
-    char buffer[1024] = {0};
+    char buffer[1024] = {0}; // we don't really care if the request is bigger then 1024, all the crucial info will still be in there
 
-    int result = recv(connection, buffer, 1024, 0);
+    int result = recv(connection, buffer, sizeof(buffer), 0);
 
     if (result == SOCKET_ERROR) {
         closesocket(connection);
-        puts("An error occured with recieve on a thread.");
+        puts("An error occured while recieving data on a thread, promptly ending thread now.");
         ExitThread(1);
-    } else {
-        ResponseBuilder();
     }
 
-    printf("%s", buffer);
+    Response response;
+    ResponseBuilder(buffer, &response);
 
-    send(connection, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 16\r\n\r\n", 65, 0);
-    send(connection, "<h1>yoo hi</h1>", 16, 0);
+    printf("%s", buffer);
+    printf("content: %s\n", response.content);
+    printf("response headers: %s\n", response.headers);
+
+    send(connection, response.headers, strlen(response.headers), 0); // please do NOT change strlen to sizeof :)
+    send(connection, response.content, response.contentLength, 0);
+
+    free(response.content);
+    response.content = NULL;
 
     closesocket(connection);
 
