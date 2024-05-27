@@ -2,6 +2,7 @@
 #include "include.h"
 
 // msg to self: content-length should NOT include null char
+// also make sure to add error checking for the fp so the server doesn't die :)
 
 void ResponseBuilder(char *request, Response *response) {
     FILE *fp = fopen("html/index.html", "r");
