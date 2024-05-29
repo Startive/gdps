@@ -1,7 +1,7 @@
 @echo off
 
 set INCLUDE=C:\vcpkg\installed\x64-windows\include
-set SOURCE=src\win32.c src\response.c
+set SOURCE=src\win32.c src\response.c src\routes.c
 set LIBS=kernel32.lib Ws2_32.lib ucrt.lib vcruntime.lib
 
 vcvars64.bat && ^

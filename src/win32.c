@@ -14,7 +14,7 @@
 void HandleConnection(SOCKET connection) {
     char buffer[1024] = {0}; // we don't really care if the request is bigger then 1024, all the crucial info will still be in there
 
-    int result = recv(connection, buffer, sizeof(buffer), 0);
+    int result = recv(connection, buffer, 1023, 0);
 
     if (result == SOCKET_ERROR) {
         closesocket(connection);
@@ -22,15 +22,16 @@ void HandleConnection(SOCKET connection) {
         ExitThread(1);
     }
 
+    puts(buffer);
+
     Response response;
     ResponseBuilder(buffer, &response);
-
-    printf("content: %s\n", response.content);
-    printf("response headers:\n%s\n", response.headers);
 
     send(connection, response.headers, strlen(response.headers), 0); // please do NOT change strlen to sizeof :)
     send(connection, response.content, strlen(response.content), 0);
 
+
+    // cleanup
     free(response.content);
     response.content = NULL;
 
@@ -74,7 +75,7 @@ int main(void) {
     if (result != 0)
         CleanExit("Failed to listen.", WSAGetLastError(), &sockfd);
     else
-        printf("Now listening on port http://127.0.0.1:%i\n\n", PORT); // make sure to add the actual PORT in sprintf later
+        printf("Now listening on port http://127.0.0.1:%i!\n\n", PORT);
 
     // accept and handle connection
     struct sockaddr client; ZeroMemory(&client, sizeof(struct sockaddr)); // unused for now, contains info about client.
