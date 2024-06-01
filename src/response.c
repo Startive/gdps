@@ -1,34 +1,40 @@
 #include "response.h"
 #include "include.h"
 
+// win32 strtok_r fix
+#ifdef _WIN32
+#define strtok_r strtok_s
+#endif // _WIN32
+
 // msg to self: content-length should NOT include null char
 // also make sure to add error checking for the fp so the server doesn't die :)
 
-#define MAX_TOKEN_HEADERS 5 // change later so post requests work
+// gives back request line and body (body will be implemented later lol)
+void ParseRequest(char *request, Request *splittedReq) {
+    char *tokens[32];
 
-/*
-* TOKENS
-* 0: contains method (GET, POST)
-* 1: contains route, ("/", "/getGJSongInfo.php")
-*/
-
-// has to be reworked cause of post requests and need to properly parse request with spaces and colons
-char **tokeniseRequest(char *request) {
-    static char *tokens[MAX_TOKEN_HEADERS]; // i feel like this might cause a memory issue sometime later, hopefully it is fine for now
-    char *saver;
+    char *saver; // for strtok_s/r
     int i = 0;
 
-    tokens[i] = strtok_s(request, " ", &saver);
+    // split main request into tokens
+    tokens[i] = strtok_r(request, "\r\n", &saver);
 
-    while (tokens[i] != NULL && i != MAX_TOKEN_HEADERS-1) 
-        tokens[++i] = strtok_s(NULL, " ", &saver);
+    while (tokens[i] != NULL)
+        tokens[++i] = strtok_r(NULL, "\r\n", &saver);
 
-    return tokens;
+    // split request line into tokens
+    i = 0;
+    splittedReq->requestLine[i] = strtok_r(tokens[0], " ", &saver);
+
+    while (splittedReq->requestLine[i] != NULL)
+        splittedReq->requestLine[++i] = strtok_r(NULL, " ", &saver);
 }
 
-void ResponseBuilder(char *request, Response *response) {
-    char **epic = tokeniseRequest(request);
-    printf("%s\n", epic[1]);
+void ResponseBuilder(char *headers, Response *response) {
+    Request request = {0};
+    ParseRequest(headers, &request);
+
+    printf("Requested route is: %s\n", request.requestLine[1]);
 
     FILE *fp = fopen("html/index.html", "r");
 

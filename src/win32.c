@@ -22,9 +22,7 @@ void HandleConnection(SOCKET connection) {
         ExitThread(1);
     }
 
-    puts(buffer);
-
-    Response response;
+    Response response = {0};
     ResponseBuilder(buffer, &response);
 
     send(connection, response.headers, strlen(response.headers), 0); // please do NOT change strlen to sizeof :)
@@ -41,7 +39,7 @@ void HandleConnection(SOCKET connection) {
 }
 
 int main(void) {
-    WSADATA wsadata; ZeroMemory(&wsadata, sizeof(WSADATA));
+    WSADATA wsadata = {0};
     int result = 0;
     int opt = 1; // idk what this does???
 
@@ -61,7 +59,7 @@ int main(void) {
         CleanExit("Failed to set sock opt.", WSAGetLastError(), &sockfd);
 
     // Bind
-    struct sockaddr_in addr; ZeroMemory(&addr, sizeof(struct sockaddr_in));
+    struct sockaddr_in addr = {0};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT);
     addr.sin_addr.S_un.S_addr = INADDR_ANY;
@@ -78,7 +76,7 @@ int main(void) {
         printf("Now listening on port http://127.0.0.1:%i!\n\n", PORT);
 
     // accept and handle connection
-    struct sockaddr client; ZeroMemory(&client, sizeof(struct sockaddr)); // unused for now, contains info about client.
+    struct sockaddr client = {0}; // unused for now, contains info about client.
     SOCKET connection = 0;
 
     while (1) {
@@ -91,12 +89,6 @@ int main(void) {
         CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)HandleConnection, (LPVOID)connection, 0, NULL);
         memset(&client, 0, sizeof(struct sockaddr));
     }
-
-    /*
-    closesocket(sockfd);
-    closesocket(connection);
-    WSACleanup();
-    */
-
-    return 0;
+    
+    return 1; // if reached then how
 }
