@@ -1,5 +1,5 @@
 #ifndef _RESPONSE_H_
-#define _RESPONSE_H
+#define _RESPONSE_H_
 
 typedef struct {
     char headers[1024]; // http headers
@@ -13,5 +13,8 @@ typedef struct {
 
 // fills the response structure with information
 void ResponseBuilder(char *request, Response *response);
+
+// parses request and puts it into a Request structure
+void ParseRequest(char *request, Request *splittedReq);
 
 #endif // _RESPONSE_H_

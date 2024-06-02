@@ -2,12 +2,21 @@
 // or maybe just do a bunch of #ifdefs for linux and windows
 // but ill probably make another file that is just for unix so its cleaner
 
-#include <stdio.h>
 #include <memory.h>
 
 #include "include.h"
 #include "response.h"
-#include "error.h"
+#include "routes.h"
+
+static void CleanExit(char errmsg[], int errcode, SOCKET *sockfd) {
+    printf("Error msg: %s\nError code: %i\n", errmsg, errcode);
+
+    if (sockfd) 
+        closesocket(*sockfd);
+
+    WSACleanup();
+    exit(1);
+}
 
 #define PORT 5555
 
@@ -42,6 +51,10 @@ int main(void) {
     WSADATA wsadata = {0};
     int result = 0;
     int opt = 1; // idk what this does???
+
+    // add routes
+    struct node *root = NULL;
+    addRoutes(root);
 
     // win32 stuff
     result = WSAStartup(MAKEWORD(2,2), &wsadata);

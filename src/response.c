@@ -1,5 +1,6 @@
 #include "response.h"
 #include "include.h"
+#include "routes.h"
 
 // win32 strtok_r fix
 #ifdef _WIN32
