@@ -8,6 +8,8 @@
 #include "response.h"
 #include "routes.h"
 
+#define PORT 5555
+
 static void CleanExit(char errmsg[], int errcode, SOCKET *sockfd) {
     printf("Error msg: %s\nError code: %i\n", errmsg, errcode);
 
@@ -17,8 +19,6 @@ static void CleanExit(char errmsg[], int errcode, SOCKET *sockfd) {
     WSACleanup();
     exit(1);
 }
-
-#define PORT 5555
 
 void HandleConnection(SOCKET connection) {
     char buffer[1024] = {0}; // we don't really care if the request is bigger then 1024, all the crucial info will still be in there
