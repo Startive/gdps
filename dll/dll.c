@@ -1,9 +1,11 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <psapi.h>
 #include <stdio.h>
 #include <string.h>
 
-// not working for now
+// useless it just don't want to work :/
+
 
 FILE *CreateConsole() {
     AllocConsole();
@@ -18,19 +20,15 @@ void Thread(HMODULE hModule) {
 
     // get all the memory addresses to string blah blah adaa df d-9w
     DWORD base = (DWORD)GetModuleHandle(0);
+    LPVOID memory = VirtualAlloc(NULL, 100, MEM_COMMIT | HEAP_ZERO_MEMORY, PAGE_READWRITE);
     UINT8 *getGJSongInfo = (UINT8*)(base + 0x2CDF44);
 
-    // change them
-    for (int i = 0; i < 52; i++) {
-        printf("0x%X/%c ", getGJSongInfo[i], getGJSongInfo[i]);
-    }
-
-    printf("\n");
+    strcpy(getGJSongInfo, "hello guys welcome back to my youtube channel");
 
     // debug
     printf("%lu\n", base);
-
-    while (!GetAsyncKeyState(0x51));
+    printf("%s\n", getGJSongInfo);
+    while (!GetAsyncKeyState(0x51)); // q key
 
     FreeConsole();
     fclose(fp);

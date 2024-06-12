@@ -6,6 +6,8 @@
 
 #include "include.h"
 #include "response.h"
+#include "dict.h"
+
 #include "routes.h"
 
 #define PORT 5555
@@ -48,13 +50,13 @@ void HandleConnection(SOCKET connection) {
 }
 
 int main(void) {
+    // add routes
+    addRoutes();
+
+    // setup server
     WSADATA wsadata = {0};
     int result = 0;
-    int opt = 1; // idk what this does???
-
-    // add routes
-    struct node *root = NULL;
-    addRoutes(root);
+    int opt = 1; // idk what this does lol
 
     // win32 stuff
     result = WSAStartup(MAKEWORD(2,2), &wsadata);

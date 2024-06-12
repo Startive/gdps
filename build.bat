@@ -1,7 +1,7 @@
 @echo off
 
 set INCLUDE=.
-set SOURCE=src\win32.c src\response.c src\routes.c
+set SOURCE=src\dict.c src\routes.c src\win32.c src\response.c
 set LIBS=kernel32.lib Ws2_32.lib ucrt.lib vcruntime.lib
 
 vcvars64.bat && ^

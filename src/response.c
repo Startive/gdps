@@ -32,10 +32,27 @@ void ParseRequest(char *request, Request *splittedReq) {
 }
 
 void ResponseBuilder(char *headers, Response *response) {
+    puts(headers);
+    
     Request request = {0};
     ParseRequest(headers, &request);
 
-    printf("Requested route is: %s\n", request.requestLine[1]);
+    if (request.requestLine[0] == NULL || request.requestLine[1] == NULL) {
+        // idk why but this is null sometimes and its weird
+        puts("Stuff is null, plz fix later :d");
+
+        return;
+    }
+
+    printf("METHOD: %s, ROUTE: %s\n", request.requestLine[0], request.requestLine[1]);
+
+    struct node *currentRoute = search(routes, request.requestLine[1]);
+    
+    if (currentRoute != NULL) {
+        runNULL(currentRoute->value);
+    } else {
+        // 404...
+    }
 
     FILE *fp = fopen("html/index.html", "r");
 

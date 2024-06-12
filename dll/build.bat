@@ -1,6 +1,6 @@
 @echo off
 
-set LIBS=user32.lib kernel32.lib ucrt.lib
+set LIBS=user32.lib kernel32.lib ucrt.lib vcruntime.lib
 set GD=F:\gd\2.113\
 set BIN=gdps.dll
 

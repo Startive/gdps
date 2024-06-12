@@ -1,20 +1,16 @@
 #ifndef _ROUTES_H_
 #define _ROUTES_H_
 
-#define MAX_ROUTE_SIZE 32
+#include "dict.h"
+#include "include.h"
 
-struct node {
-    char key[MAX_ROUTE_SIZE];
-    struct node *left, *right;
-};
+extern struct node *routes; // active and allocated struct containg all the routes
 
-struct node *newNode(char *item);
+void addRoutes();
 
-struct node *insert(struct node *node, char *key);
-#define addRoute insert
+void runNULL(void *function); // runs a null function thats declared as: "void *function;" 
 
-struct node *search(struct node *root, char *key);
-
-void addRoutes(struct node *root);
+void *getGJSongInfo_php();
+void *rootRoute();
 
 #endif // _ROUTES_H_
