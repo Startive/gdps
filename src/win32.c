@@ -27,6 +27,11 @@ void HandleConnection(SOCKET connection) {
 
     int result = recv(connection, buffer, 1023, 0);
 
+    // if connection has been closed by client or no information has been given we will just close the connection
+    if (result == 0) {
+        goto end;
+    }
+
     if (result == SOCKET_ERROR) {
         closesocket(connection);
         puts("An error occured while recieving data on a thread, promptly ending thread now.");
@@ -34,7 +39,7 @@ void HandleConnection(SOCKET connection) {
     }
 
     Response response = {0};
-    ResponseBuilder(buffer, &response);
+    getResponse(buffer, &response);
 
     send(connection, response.headers, strlen(response.headers), 0); // please do NOT change strlen to sizeof :)
     send(connection, response.content, strlen(response.content), 0);
@@ -44,8 +49,8 @@ void HandleConnection(SOCKET connection) {
     free(response.content);
     response.content = NULL;
 
+end:
     closesocket(connection);
-
     ExitThread(0);
 }
 

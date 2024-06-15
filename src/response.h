@@ -12,7 +12,7 @@ typedef struct {
 } Request;
 
 // fills the response structure with information
-void ResponseBuilder(char *request, Response *response);
+void getResponse(char *request, Response *response);
 
 // parses request and puts it into a Request structure
 void ParseRequest(char *request, Request *splittedReq);

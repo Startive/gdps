@@ -2,6 +2,8 @@
 #include "include.h"
 #include "routes.h"
 
+#include <assert.h>
+
 // win32 strtok_r fix
 #ifdef _WIN32
 #define strtok_r strtok_s
@@ -29,49 +31,17 @@ void ParseRequest(char *request, Request *splittedReq) {
 
     while (splittedReq->requestLine[i] != NULL)
         splittedReq->requestLine[++i] = strtok_r(NULL, " ", &saver);
+
+    // split the rest
+
+    // split the params from a POST request
 }
 
-void ResponseBuilder(char *headers, Response *response) {
-    puts(headers);
-    
+void getResponse(char *headers, Response *response) {
     Request request = {0};
     ParseRequest(headers, &request);
 
-    if (request.requestLine[0] == NULL || request.requestLine[1] == NULL) {
-        // idk why but this is null sometimes and its weird
-        puts("Stuff is null, plz fix later :d");
-
-        return;
-    }
-
     printf("METHOD: %s, ROUTE: %s\n", request.requestLine[0], request.requestLine[1]);
 
-    struct node *currentRoute = search(routes, request.requestLine[1]);
-    
-    if (currentRoute != NULL) {
-        runNULL(currentRoute->value);
-    } else {
-        // 404...
-    }
-
-    FILE *fp = fopen("html/index.html", "r");
-
-    int contentLength = 512;
-    response->content = calloc(contentLength, sizeof(char));
-
-    size_t bytesRead = 0;
-    do {
-        bytesRead = fread(response->content, sizeof(char), contentLength, fp);
-        if (bytesRead > 0) {
-            contentLength *= 2;
-            response->content = realloc(response->content, contentLength);
-        }
-    } while (bytesRead > 0);
-
-    snprintf(response->headers, 1024, "HTTP/1.1 200 OK\r\n\
-    Content-Type: text/html\r\n\
-    Content-Length: %zu\r\n\r\n", strlen(response->content));
-
-    fclose(fp);
-    fp = NULL;
+    rootRoute(response);
 }

@@ -29,7 +29,7 @@ struct node *insert(struct node *node, char *key, void *value)
     return (struct node*)NULL;
 }
 
-struct node *search(struct node *root, char *key) {
+struct node *search(struct node *root, const char *key) {
     // the best case
     if (root == NULL || strncmp(root->key, key, MAX_KEY_SIZE) == 0) {
         return root;

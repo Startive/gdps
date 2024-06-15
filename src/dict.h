@@ -14,6 +14,6 @@ struct node *initNode(char *key, void *value);
 
 struct node *insert(struct node *node, char *key, void *value);
 
-struct node *search(struct node *root, char *key);
+struct node *search(struct node *root, const char *key);
 
 #endif // _DICT_H_
